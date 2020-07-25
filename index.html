@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+
+<title>ketu</title>
+<link rel="stylesheet" href="style.css">
+
+<div id="file-export">
+
+<div class="file-output-menu">
+<input type="checkbox" id="file-output-show" class="file-io-show">
+<label for="file-output-show">export</label>
+<div class="file-output">
+<div><a class="bloblink" href="">[json blob link]</a><a class="datalink" href="">[json data link]</a></div>
+<div><a class="bloblink" href="" download>[json blob download link]</a><a class="datalink" href="" download>[json data download link]</a></div>
+<button onclick="setBlobURL(app.$data)">whole $data</button>
+<button onclick="setBlobURL(app.funcDataArr.map(d=>d.src))">functions</button>
+<button onclick="setBlobURL(app.pipeline)">pipeline</button>
+<button onclick="setBlobURL({funcDataArr:app.funcDataArr.map(d=>d.src),pipeline:app.pipeline})">functions+pipeline</button>
+<button onclick="setBlobURL(app.output,true)">final output string</button>
+<button onclick="setBlobURL([app.funcDataArr.map(d=>d.src).join('\n======\n'),app.output].join('\n============\n'),true)">functions+output</button>
+</div>
+</div>
+
+</div>
+
+<div id="app">
+<div>
+<input type="checkbox" id="file-input-show" class="file-io-show">
+<label for="file-input-show">input file menu</label>
+<div class="file-input">
+<input type="file" v-bind:value="inputFileValue" v-on:change="inputFileValue=$event.target.value;inputFile=$event.target.files[0]">
+</div>
+</div>
+
+<div class="init-input-container">
+<textarea
+  class="initial-input"
+  v-bind:class="{empty: !initInput}"
+  v-model="initInput"
+  placeholder="no initial data"
+  v-on:focus="focusOn = 'initInput'"
+  v-on:blur="focusOn = ''"
+  v-bind:style="{
+    height: focusOn == 'initInput' ?
+    Math.min(Math.max(lineCnt(
+      initInput
+    ),1),12)+'.2em':'1.2em'
+  }"
+  v-bind:readonly="lockInput"
+  ref="initInputTA"
+></textarea>
+<label class="vmcheck"><input
+  type="checkbox"
+  v-model="lockInput"
+  v-on:click=""
+><span>{{lockInput?"🔒":"🔓"}}</span>
+</label>
+<span class="vmbutton"
+  v-if="inputFile&&enableReread"
+  v-on:click="resetInitInputViaInitFile()"
+>⏮</span>
+</div>
+
+<div v-for="(p, index) in pipeline">
+  <div class="func-container">
+    <div
+      v-show="modes.bypass"
+      class="bypass"
+      v-on:click.prevent="bypassPipe(index)"
+    >{{ funcDataArr[index].bypassed ? "▶️" : "⏸" }}</div>
+    <div
+      v-show="modes.splice"
+      class="splice up"
+      v-on:click.prevent="swapPipe(index-1,index)"
+      v-bind:class="{nouse:index==0}"
+    >↑</div>
+    <textarea
+      v-show="!funcDataArr[index].bypassed"
+      v-model="funcDataArr[index].src"
+      v-bind:class="{error: p.error}"
+      v-bind:error-type="p.error"
+      v-bind:disabled="someOf(modes)"
+      v-on:focus="focusOn = 'funcSrc'+index"
+      v-on:blur="focusOn = ''"
+      v-bind:style="{
+        height: focusOn == 'funcSrc'+index ?
+          Math.min(Math.max(lineCnt(
+            funcDataArr[index].src
+          ),1),12)+'.2em':'1.2em'
+        }"
+    ></textarea>
+    <textarea
+      class="bypassed"
+      v-if="funcDataArr[index].bypassed"
+      v-model="funcDataArr[index].bypassed.src"
+      v-bind:disabled="someOf(modes)"
+      v-on:focus="focusOn = 'bpsdSrc'+index"
+      v-on:blur="focusOn = ''"
+      v-bind:style="{
+        height: focusOn == 'bpsdSrc'+index ?
+          Math.min(Math.max(lineCnt(
+            funcDataArr[index].bypassed.src
+          ),1),12)+'.2em':'1.2em'
+        }"
+    ></textarea>
+    <div
+      v-if="modes.splice"
+      class="splice rm"
+      v-on:click.prevent="splicePipe(index,1)"
+    >×</div>
+  </div>
+  <div
+    class="output-container"
+    v-show="!funcDataArr[index].bypassed"
+  >
+    <span
+      class="output-type"
+      v-html="p.type"
+      v-bind:class="{error:p.error}"
+    ></span>
+    <span
+      class="toggler"
+      v-on:click.prevent="toggleBVOf(
+        funcDataArr[index]
+          .pipeShowCfg,
+        'expandOutput'
+      )"
+    >{{
+      funcDataArr[index].pipeShowCfg
+      .expandOutput ? "…▲" : "▼…"
+    }}</span>
+    <span
+      class="toggler"
+      v-on:click.prevent="showOutputOfIndex=index"
+    >⤵︎</span>
+  <div
+    class="output"
+    v-bind:class="{
+      error: p.error,
+      expand: funcDataArr[index].pipeShowCfg.expandOutput
+    }"
+  >{{ p.error ? p.output.message : p.output }}</div>
+  </div>
+</div>
+
+<div class="pipe-tools">
+<button v-on:click.prevent="newPipe">▷＋</button>
+<label class="vmcheck"><input
+  type="checkbox"
+  v-model="modes.splice"
+><span>↑/×<span></label>
+<label class="vmcheck"><input
+  type="checkbox"
+  v-model="modes.bypass"
+><span>⏸</span></label>
+</div>
+
+<div class="pipeline-tools">
+<label class="vmcheck"><input type="checkbox" v-model="enableReset"><span>🌀</span></label>
+<div class="remove-all" v-if="enableReset"><button v-on:click="removeAll">🌊⚠️🌀🌪🌪🌪🌪🚽🌪🌪🌪🌪🌀⚠️🌊</button></div>
+<div class="init-again" v-if="!funcDataArr.length&&!initInput&&!inputFile">
+  <button v-on:click="initFill($data)">🍡</button>
+  <button v-on:click="newPipe(2);$data.funcDataArr.forEach((d,i)=>{
+    d.src = ['_=>_.split` `','([s,t])=>`.i ${t} lo ${s} ko`'][i]
+  });$data.initInput='pinji punji';">🍆</button>
+</div>
+</div>
+
+<div class="output-view" v-if="showOutputOfIndex>-1">
+<button v-on:click="setSelection($event.target.parentNode.querySelector('.output-view-body'))">select all</button>
+<button v-on:click="showOutputOfIndex=NaN">×</button>
+<div class="output-view-body" v-html="pipeline[showOutputOfIndex].output"></div>
+</div>
+
+</div>
+
+<script src="lib/vue.min.js"></script>
+<script src="script.js"></script>

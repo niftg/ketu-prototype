@@ -1,0 +1,188 @@
+body {
+  background-color: floralwhite;
+}
+
+.file-input, .file-output {
+  display: none;
+}
+.file-io-show:checked + label + .file-input,
+.file-io-show:checked + label + .file-output {
+  display: block;
+}
+.file-output-menu {
+  text-align: right;
+}
+.bloblink[href=""], .datalink[href=""]{
+  display: none;
+}
+
+textarea {
+  border: solid 0.5em lightskyblue;
+  font-family: monospace;
+  width: 80em;
+  max-width: 80%;
+  height: 1.2em;
+  white-space: pre;
+}
+textarea:focus {
+  background-color: azure;
+}
+
+textarea.initial-input {
+  border-color: orange;
+  background-color: peachpuff;
+  white-space: nowrap
+}
+textarea.initial-input.empty {
+  border-style: dashed;
+  background-color: inherit;
+  -webkit-appearance: none;
+}
+textarea.initial-input:focus {
+  background-color: bisque;
+  white-space: pre;
+}
+textarea.initial-input:read-only {
+  -webkit-appearance: none;
+  background-color: orange;
+}
+
+.init-input-container label.vmcheck :checked + span {
+  background-color: gold;
+}
+label.vmcheck input[type="checkbox"] {
+  display: none;
+}
+
+textarea.error[error-type="func"] {
+  border-color: crimson;
+  background-color: lightpink;
+}
+textarea.error[error-type="empty"],
+textarea.error[error-type="nofunc"] {
+  border-color: lightblue;
+  border-style: dotted;
+  background-color: inherit;
+  -webkit-appearance: none;
+}
+textarea.error[error-type="runtime"] {
+  border-color: steelblue;
+  background-color: lightsteelblue;
+}
+textarea.error[error-type="prev"] {
+  border-color: dimgray;
+  background-color: gray;
+}
+
+textarea.bypassed {
+  border-color: lightsteelblue;
+  background-color: lightsteelblue;
+  border-style: outset;
+  -webkit-appearance: none;
+}
+textarea.bypassed:focus {
+  background-color: lightsteelblue;
+}
+
+.output, .output-type {
+  font-family: monospace;
+  background-color: gainsboro;
+  height: 1em;
+  overflow: hidden;
+}
+.output {
+  border: solid 0.25em gainsboro;
+}
+.output.error {
+  color: dimgray;
+  background-color: silver;
+  border-color: silver;
+}
+.output.expand {
+  height: 100%;
+  min-height: 2em;
+  max-height: 10em;
+  overflow: scroll;
+  white-space: pre;
+  border-color: silver;
+}
+.output-type {
+  background-color: lightsteelblue;
+}
+.output-type.error {
+  background-color: tan;
+}
+
+.output-container .toggler {
+  font-size: 0.6em;
+  color: floralwhite;
+  background-color: plum;
+  vertical-align: baseline;
+  font-weight: bold;
+}
+.output-container {
+  margin-left: 1em;
+  margin-bottom: 0.5em;
+  margin-top: -0.25em;
+}
+
+.splice, .bypass, label.vmcheck, span.vmbutton {
+  display: inline-block;
+  width: 1.2em;
+  height: 1.2em;
+  font-weight: bold;
+  text-align: center;
+  vertical-align: 0.5em;
+}
+.splice.rm {
+  color: white;
+  background-color: red;
+}
+.splice.up {
+  color: white;
+  background-color: royalblue;
+}
+.splice.up.nouse {
+  color: #0000;
+  background-color: #0000;
+}
+
+.pipe-tools {
+  margin-top: 0.8em;
+  padding-top: 0.2em;
+  background-color: pink;
+}
+.pipe-tools .vmcheck {
+  width: inherit;
+  vertical-align: baseline;
+  font-weight: bold;
+}
+.pipe-tools .vmcheck input + span,
+.pipeline-tools .vmcheck input + span {
+  border-style: outset;
+}
+.pipe-tools .vmcheck input:checked + span,
+.pipeline-tools .vmcheck input:checked + span {
+  border-style: inset;
+}
+
+.pipeline-tools {
+  margin-top: 2em;
+  background-color: inherit;
+}
+.remove-all {
+  display: block;
+  text-align: center;
+}
+
+.output-view {
+  margin-top: 0.75em;
+  padding-top: 0.75em;
+  border-top: dashed 1px plum;
+}
+.output-view-body {
+  border: none;
+  background-color: lightgreen;
+  font-family: monospace;
+  white-space: pre;
+}
