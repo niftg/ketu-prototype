@@ -66,8 +66,7 @@ var app = new Vue({
   watch: {
     inputFile: function() {
       this.resetInitInputViaInitFile()
-    },
-    inputFileValue(a){this.log(a)}
+    }
   },
   methods: {...console,
     toggleBVOf, lineCnt, someOf, initFill,
@@ -127,9 +126,6 @@ var app = new Vue({
       this.inputFile = null
       this.inputFileValue = null
       this.showOutputOfIndex = NaN
-    },
-    blobURLOf(...args) {
-      this.log(args)
     },
     setSelection(node) {
       var sel = window.getSelection()
