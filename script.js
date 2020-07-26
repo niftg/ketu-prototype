@@ -205,16 +205,23 @@ function someOf(obj, filter) {
   )
 }
 
-function setBlobURL(data,rawtext=false) {
+function setBlobURL(data,type="export",rawtext=false) {
+  var dlname = `ketu_${type.replace(/[\s\$]/g,"")}_${new Date().toISOString().replace(/[^\d]/g,"")}.${rawtext?"txt":"json"}`
   var a = document.querySelectorAll(".bloblink")
   var blob = rawtext ?
     new Blob([data.toString()],{type:"text/plain"}) :
     new Blob([JSON.stringify(data,null,2)],{type:"text/json"})
-  for(var i of a){i.href = URL.createObjectURL(blob)}
+  for(var i of a){
+    i.href = URL.createObjectURL(blob)
+    if(i.hasAttribute('download')){i.download = dlname}
+  }
   var a2 = document.querySelectorAll(".datalink")
   var dataReader = new FileReader()
   dataReader.onload = ()=>{
-    for(var i of a2){i.href = dataReader.result}
+    for(var i of a2){
+      i.href = dataReader.result
+      if(i.hasAttribute('download')){i.download = dlname}
+    }
   }
   dataReader.readAsDataURL(blob)
 }

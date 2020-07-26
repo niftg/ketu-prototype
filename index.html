@@ -11,14 +11,16 @@
 <input type="checkbox" id="file-output-show" class="file-io-show">
 <label for="file-output-show">export</label>
 <div class="file-output">
-<div><a class="bloblink" href="">[json blob link]</a><a class="datalink" href="">[json data link]</a></div>
-<div><a class="bloblink" href="" download>[json blob download link]</a><a class="datalink" href="" download>[json data download link]</a></div>
-<button onclick="setBlobURL(app.$data)">whole $data</button>
-<button onclick="setBlobURL(app.funcDataArr.map(d=>d.src))">functions</button>
-<button onclick="setBlobURL(app.pipeline)">pipeline</button>
-<button onclick="setBlobURL({funcDataArr:app.funcDataArr.map(d=>d.src),pipeline:app.pipeline})">functions+pipeline</button>
-<button onclick="setBlobURL(app.output,true)">final output string</button>
-<button onclick="setBlobURL([app.funcDataArr.map(d=>d.src).join('\n======\n'),app.output].join('\n============\n'),true)">functions+output</button>
+<div><a class="bloblink" href="">[blob link]</a><a class="datalink" href="">[data link]</a></div>
+<div><a class="bloblink" href="" download>[blob download link]</a><a class="datalink" href="" download>[data download link]</a></div>
+<button onclick="setBlobURL(app.$data,this.textContent)">whole $data</button>
+<button onclick="setBlobURL(app.funcDataArr.map(d=>d.src),this.textContent)">functions</button>
+<button onclick="setBlobURL(app.pipeline,this.textContent)">pipeline</button>
+<button onclick="setBlobURL({funcDataArr:app.funcDataArr.map(d=>d.src),pipeline:app.pipeline},this.textContent)">functions+pipeline</button>
+<div>
+<button onclick="setBlobURL(app.output,this.textContent,true)">final output string</button>
+<button onclick="setBlobURL([app.funcDataArr.map(d=>d.src).join('\n======\n'),app.output].join('\n============\n'),this.textContent,true)">functions+output</button>
+</div>
 </div>
 </div>
 
@@ -29,7 +31,8 @@
 <input type="checkbox" id="file-input-show" class="file-io-show">
 <label for="file-input-show">input file menu</label>
 <div class="file-input">
-<input type="file" v-bind:value="inputFileValue" v-on:change="inputFileValue=$event.target.value;inputFile=$event.target.files[0]">
+<div><input type="file" v-bind:value="inputFileValue" v-on:change="inputFileValue=$event.target.value;inputFile=$event.target.files[0]"></div>
+<div><label>fetch URL: <input type="text" v-on:change="fetch($event.target.value,{mode:'cors'}).then(r=>r.blob()).then(b=>{inputFile=b;inputFileValue=null;}).catch(console.error)"></label></div>
 </div>
 </div>
 
@@ -133,7 +136,8 @@
     <span
       class="toggler"
       v-on:click.prevent="showOutputOfIndex=index"
-    >⤵︎</span>
+      v-bind:style="{backgroundColor:showOutputOfIndex==index?'mediumslateblue':'plum'}"
+    >⤵︎⤵︎⤵︎</span>
   <div
     class="output"
     v-bind:class="{
