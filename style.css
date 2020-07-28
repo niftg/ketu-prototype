@@ -165,6 +165,9 @@ textarea.bypassed:focus {
 .pipeline-tools .vmcheck input:checked + span {
   border-style: inset;
 }
+.pipeline-tools .vmcheck {
+  margin: 0.5em;
+}
 
 .pipeline-tools {
   margin-top: 2em;
@@ -173,6 +176,13 @@ textarea.bypassed:focus {
 .remove-all {
   display: block;
   text-align: center;
+}
+.inject {
+  background-color: salmon;
+  margin: 0.5em;
+}
+.inject label {
+  text-decoration: underline dotted;
 }
 
 .output-view {

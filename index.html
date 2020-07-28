@@ -11,6 +11,7 @@
 <input type="checkbox" id="file-output-show" class="file-io-show">
 <label for="file-output-show">export</label>
 <div class="file-output">
+<span class="filename"></span>
 <div><a class="bloblink" href="">[blob link]</a><a class="datalink" href="">[data link]</a></div>
 <div><a class="bloblink" href="" download>[blob download link]</a><a class="datalink" href="" download>[data download link]</a></div>
 <button onclick="setBlobURL(app.$data,this.textContent)">whole $data</button>
@@ -162,6 +163,7 @@
 
 <div class="pipeline-tools">
 <label class="vmcheck"><input type="checkbox" v-model="enableReset"><span>🌀</span></label>
+<label class="vmcheck"><input type="checkbox" v-model="enableInject"><span>💉</span></label>
 <div class="remove-all" v-if="enableReset"><button v-on:click="removeAll">🌊⚠️🌀🌪🌪🌪🌪flush🚽all🌪🌪🌪🌪🌀⚠️🌊</button></div>
 <div class="init-again" v-if="!funcDataArr.length&&!initInput&&!inputFile">
   <div>
@@ -170,11 +172,11 @@
       d.src = ['_=>_.split` `','([s,t])=>`.i ${t} lo ${s} ko`'][i]
     });$data.initInput='pinji punji';">🍆</button>
   </div>
-  <div>
-    <label>⚠️💉put functions from local file💉⚠️:
-      <input type="file" v-on:change="putFuncsFromFile($event.target.files[0])">
-    </label>
-  </div>
+</div>
+<div v-if="enableInject" class="inject">
+  <label>⚠️💉put functions from local file💉⚠️:
+    <input type="file" v-on:change="putFuncsFromFile($event.target.files[0])">
+  </label>
 </div>
 </div>
 

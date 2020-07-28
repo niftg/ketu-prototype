@@ -50,7 +50,8 @@ var app = new Vue({
     lockInput: false,
     enableReread: false,
     enableReset: false,
-    showOutputOfIndex: NaN
+    showOutputOfIndex: NaN,
+    enableInject: false
   },
   computed: {
     funcArr: function() {
@@ -128,6 +129,10 @@ var app = new Vue({
       this.inputFileValue = null
       this.showOutputOfIndex = NaN
     },
+    removeFuncs() {
+      this.funcDataArr = []
+      this.showOutputOfIndex = NaN
+    },
     putFuncsFromFile(file) {
       var reader = new FileReader()
       var that = this
@@ -150,6 +155,7 @@ var app = new Vue({
           .concat(fl.length)
         funcSrcs = delims.map((d,i,a)=>fl.slice(a[i-1]+1,d)).map(s=>s.join`\n`)
       }
+      this.removeFuncs()
       this.newPipe(funcSrcs.length)
       this.funcDataArr.forEach((d,i)=>{d.src=funcSrcs[i]})
     }
@@ -236,6 +242,7 @@ function setBlobURL(data,type="export",rawtext=false) {
   var a2 = document.querySelectorAll(".datalink")
   var dataReader = new FileReader()
   dataReader.onload = ()=>{
+    document.querySelector(".file-output .filename").textContent = dlname
     for(var i of a2){
       i.href = dataReader.result
       if(i.hasAttribute('download')){i.download = dlname}
