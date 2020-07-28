@@ -171,11 +171,23 @@
 </div>
 </div>
 
-<div class="output-view" v-if="showOutputOfIndex>-1">
+<section class="output-view" v-if="showOutputOfIndex>-1">
 <button v-on:click="setSelection($event.target.parentNode.querySelector('.output-view-body'))">select all</button>
 <button v-on:click="showOutputOfIndex=NaN">×</button>
-<div class="output-view-body" v-html="pipeline[showOutputOfIndex].output"></div>
-</div>
+<label>
+  <input
+    type="checkbox"
+    v-model="funcDataArr[showOutputOfIndex].pipeShowCfg.preferHTMLView"
+>prefer HTML view
+</label>
+<section
+  class="output-view-body"
+  v-html="pipeline[showOutputOfIndex].output"
+  v-bind:class="{
+    'prefer-html-view':funcDataArr[showOutputOfIndex].pipeShowCfg.preferHTMLView
+  }"
+></section>
+</section>
 
 </div>
 

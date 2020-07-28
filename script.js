@@ -7,7 +7,8 @@ var store = {
       funcDataArr: {
         src: bypassFuncSrc,
         pipeShowCfg: {
-          expandOutput: false
+          expandOutput: false,
+          preferHTMLView: false
         }
       },
       initInput: new Date(-12345).toISOString(),

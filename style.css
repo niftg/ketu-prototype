@@ -186,3 +186,7 @@ textarea.bypassed:focus {
   font-family: monospace;
   white-space: pre;
 }
+.output-view-body.prefer-html-view {
+  white-space: normal;
+  font-family: inherit;
+}
