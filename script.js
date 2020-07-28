@@ -70,7 +70,7 @@ var app = new Vue({
     }
   },
   methods: {...console,
-    toggleBVOf, lineCnt, someOf, initFill,
+    toggleBVOf, lineCnt, someOf, initFill, setSelection,
     newPipe(count=1) {
       for (_ of range(count)) {
         this.funcDataArr
@@ -128,9 +128,30 @@ var app = new Vue({
       this.inputFileValue = null
       this.showOutputOfIndex = NaN
     },
-    setSelection(node) {
-      var sel = window.getSelection()
-      sel.selectAllChildren(node)
+    putFuncsFromFile(file) {
+      var reader = new FileReader()
+      var that = this
+      reader.onload = ()=>{
+        that.getFuncsFromExport(reader.result,file.type)
+      }
+      reader.readAsText(file)
+    },
+    getFuncsFromExport(srcText,filetype) {
+      var funcSrcs
+      if(/json/.test(filetype)){
+        var obj = JSON.parse(srcText)
+        if(Array.isArray(obj)){funcSrcs = obj}
+        else{funcSrcs = obj.funcDataArr.map(d=>d.src?d.src:d)}
+      }else{
+        var [f] = srcText.split(/(\r\n|[\r\n])={9,}/)
+        var fl = f.split(/\r\n|[\r\n]/)
+        var delims =
+          fl.map((s,i)=>[/^={5,}$/.test(s),i]).filter(([s,i])=>s).map(([s,i])=>i)
+          .concat(fl.length)
+        funcSrcs = delims.map((d,i,a)=>fl.slice(a[i-1]+1,d)).map(s=>s.join`\n`)
+      }
+      this.newPipe(funcSrcs.length)
+      this.funcDataArr.forEach((d,i)=>{d.src=funcSrcs[i]})
     }
   }
 })
@@ -221,6 +242,11 @@ function setBlobURL(data,type="export",rawtext=false) {
     }
   }
   dataReader.readAsDataURL(blob)
+}
+
+function setSelection(node) {
+  var sel = window.getSelection()
+  sel.selectAllChildren(node)
 }
 
 ["alert","prompt","confirm"]

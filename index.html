@@ -162,12 +162,19 @@
 
 <div class="pipeline-tools">
 <label class="vmcheck"><input type="checkbox" v-model="enableReset"><span>🌀</span></label>
-<div class="remove-all" v-if="enableReset"><button v-on:click="removeAll">🌊⚠️🌀🌪🌪🌪🌪🚽🌪🌪🌪🌪🌀⚠️🌊</button></div>
+<div class="remove-all" v-if="enableReset"><button v-on:click="removeAll">🌊⚠️🌀🌪🌪🌪🌪flush🚽all🌪🌪🌪🌪🌀⚠️🌊</button></div>
 <div class="init-again" v-if="!funcDataArr.length&&!initInput&&!inputFile">
-  <button v-on:click="initFill($data)">🍡</button>
-  <button v-on:click="newPipe(2);$data.funcDataArr.forEach((d,i)=>{
-    d.src = ['_=>_.split` `','([s,t])=>`.i ${t} lo ${s} ko`'][i]
-  });$data.initInput='pinji punji';">🍆</button>
+  <div>
+    <button v-on:click="initFill($data)">🍡</button>
+    <button v-on:click="newPipe(2);$data.funcDataArr.forEach((d,i)=>{
+      d.src = ['_=>_.split` `','([s,t])=>`.i ${t} lo ${s} ko`'][i]
+    });$data.initInput='pinji punji';">🍆</button>
+  </div>
+  <div>
+    <label>⚠️💉put functions from local file💉⚠️:
+      <input type="file" v-on:change="putFuncsFromFile($event.target.files[0])">
+    </label>
+  </div>
 </div>
 </div>
 
