@@ -37,7 +37,10 @@
 </div>
 </div>
 
-<div class="init-input-container">
+<div><label><input type="checkbox" v-model="hideInitInput">
+  hide initial input
+</label></div>
+<div class="init-input-container" v-if="!hideInitInput">
 <textarea
   class="initial-input"
   v-bind:class="{empty: !initInput}"
@@ -139,12 +142,23 @@
       v-on:click.prevent="showOutputOfIndex=index"
       v-bind:style="{backgroundColor:showOutputOfIndex==index?'mediumslateblue':'plum'}"
     >⤵︎⤵︎⤵︎</span>
+    <span
+    class="toggler"
+    v-on:click.prevent="toggleBVOf(
+      funcDataArr[index]
+        .pipeShowCfg,
+      'hideOutput')"
+    v-bind:style="{backgroundColor:
+      funcDataArr[index].pipeShowCfg.hideOutput?'mediumslateblue':'plum'
+    }"
+    >[×]</span>
   <div
     class="output"
     v-bind:class="{
       error: p.error,
       expand: funcDataArr[index].pipeShowCfg.expandOutput
     }"
+    v-show="!funcDataArr[index].pipeShowCfg.hideOutput"
   >{{ p.error ? p.output.message : p.output }}</div>
   </div>
 </div>

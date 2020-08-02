@@ -8,7 +8,8 @@ var store = {
         src: bypassFuncSrc,
         pipeShowCfg: {
           expandOutput: false,
-          preferHTMLView: false
+          preferHTMLView: false,
+          hideOutput: false
         }
       },
       initInput: new Date(-12345).toISOString(),
@@ -51,7 +52,8 @@ var app = new Vue({
     enableReread: false,
     enableReset: false,
     showOutputOfIndex: NaN,
-    enableInject: false
+    enableInject: false,
+    hideInitInput: false
   },
   computed: {
     funcArr: function() {
