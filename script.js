@@ -111,6 +111,7 @@ var app = new Vue({
       var reader = new FileReader()
       var that = this
       reader.onload = ()=>{
+        if(lineCnt(reader.result)>10000){that.hideInitInput=true} // avoid crash
         that.initInput = reader.result
         that.lockInput = true
         if(job){job()}
