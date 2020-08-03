@@ -53,7 +53,9 @@ var app = new Vue({
     enableReset: false,
     showOutputOfIndex: NaN,
     enableInject: false,
-    hideInitInput: false
+    hideInitInput: false,
+    enableAutoCacheMenu: false,
+    autoCache: false
   },
   computed: {
     funcArr: function() {
@@ -70,10 +72,21 @@ var app = new Vue({
   watch: {
     inputFile: function() {
       this.resetInitInputViaInitFile()
+    },
+    funcDataArr: {
+      handler: function() {
+        if(!this.autoCache){return}
+        debounce(()=>{
+          window.localStorage.setItem("cache",JSON.stringify({
+            funcSrcs: this.funcDataArr.map(d=>d.src)
+          }))
+        },2000)()
+      },
+      deep: true
     }
   },
   methods: {...console,
-    toggleBVOf, lineCnt, someOf, initFill, setSelection,
+    toggleBVOf, lineCnt, someOf, initFill, setSelection, chkLS,
     newPipe(count=1) {
       for (_ of range(count)) {
         this.funcDataArr
@@ -149,6 +162,7 @@ var app = new Vue({
       if(/json/.test(filetype)){
         var obj = JSON.parse(srcText)
         if(Array.isArray(obj)){funcSrcs = obj}
+        else if(obj.funcSrcs){funcSrcs = obj.funcSrcs}
         else{funcSrcs = obj.funcDataArr.map(d=>d.src?d.src:d)}
       }else{
         var [f] = srcText.split(/(\r\n|[\r\n])={9,}/)
@@ -164,6 +178,11 @@ var app = new Vue({
     }
   }
 })
+var cached = window.localStorage.getItem("cache")
+if(cached){
+  app.getFuncsFromExport(cached,"json")
+  app.autoCache = true
+}
 
 function newFunc(src) {
   try{
@@ -259,6 +278,10 @@ function setSelection(node) {
   sel.selectAllChildren(node)
 }
 
+function chkLS(){
+  return !!window.localStorage.length
+}
+
 ["alert","prompt","confirm"]
 .forEach(m=>{
   window[m] = function(...args){
@@ -267,3 +290,11 @@ function setSelection(node) {
     throw Error(msg)
   }
 })
+
+function debounce(fn, wait) {
+  var timeout
+  return function(){
+    clearTimeout(timeout)
+    timeout = setTimeout(fn, wait)
+  }
+}

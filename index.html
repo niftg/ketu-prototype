@@ -178,6 +178,7 @@
 <div class="pipeline-tools">
 <label class="vmcheck"><input type="checkbox" v-model="enableReset"><span>🌀</span></label>
 <label class="vmcheck"><input type="checkbox" v-model="enableInject"><span>💉</span></label>
+<label class="vmcheck"><input type="checkbox" v-model="enableAutoCacheMenu"><span>💾</span></label>
 <div class="remove-all" v-if="enableReset"><button v-on:click="removeAll">🌊⚠️🌀🌪🌪🌪🌪flush🚽all🌪🌪🌪🌪🌀⚠️🌊</button></div>
 <div class="init-again" v-if="!funcDataArr.length&&!initInput&&!inputFile">
   <div>
@@ -191,6 +192,13 @@
   <label>⚠️💉put functions from local file💉⚠️:
     <input type="file" v-on:change="putFuncsFromFile($event.target.files[0])">
   </label>
+</div>
+<div v-if="enableAutoCacheMenu">
+<label><input type="checkbox" v-model="autoCache">(automatically save function drafts to localStorage)</label>
+<button
+  v-show="chkLS()"
+  v-on:click="window.localStorage.clear()"
+  >clear localStorage</button>
 </div>
 </div>
 
