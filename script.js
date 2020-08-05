@@ -55,7 +55,8 @@ var app = new Vue({
     enableInject: false,
     hideInitInput: false,
     enableAutoCacheMenu: false,
-    autoCache: false
+    autoCache: false,
+    autoCacheStorage: "localStorage"
   },
   computed: {
     funcArr: function() {
@@ -76,8 +77,9 @@ var app = new Vue({
     funcDataArr: {
       handler: function() {
         if(!this.autoCache){return}
+        var cStore = this.autoCacheStorage
         debounce(()=>{
-          window.localStorage.setItem("cache",JSON.stringify({
+          window[cStore].setItem("cache",JSON.stringify({
             funcSrcs: this.funcDataArr.map(d=>d.src)
           }))
         },2000)()
@@ -86,7 +88,7 @@ var app = new Vue({
     }
   },
   methods: {...console,
-    toggleBVOf, lineCnt, someOf, initFill, setSelection, chkLS,
+    toggleBVOf, lineCnt, someOf, initFill, setSelection, chkWS,
     newPipe(count=1) {
       for (_ of range(count)) {
         this.funcDataArr
@@ -178,10 +180,14 @@ var app = new Vue({
     }
   }
 })
-var cached = window.localStorage.getItem("cache")
-if(cached){
-  app.getFuncsFromExport(cached,"json")
+var cached =
+  ["session","local"]
+  .map(t=>({type:t,item:window[t+"Storage"].getItem("cache")}))
+  .reduce((a,c)=>!!a.item?a:c)
+if(cached.item){
+  app.getFuncsFromExport(cached.item,"json")
   app.autoCache = true
+  app.autoCacheStorage = cached.type+"Storage"
 }
 
 function newFunc(src) {
@@ -278,8 +284,8 @@ function setSelection(node) {
   sel.selectAllChildren(node)
 }
 
-function chkLS(){
-  return !!window.localStorage.length
+function chkWS(type){
+  return !!window[type+"Storage"].length
 }
 
 ["alert","prompt","confirm"]

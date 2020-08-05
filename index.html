@@ -194,11 +194,18 @@
   </label>
 </div>
 <div v-if="enableAutoCacheMenu">
-<label><input type="checkbox" v-model="autoCache">(automatically save function drafts to localStorage)</label>
-<button
-  v-if="chkLS()"
-  v-on:click="window.localStorage.clear();$event.target.style.display='none'"
-  >clear localStorage</button>
+<label><input type="checkbox" v-model="autoCache">cache functions</label>
+<span v-if="autoCache"
+  >to:
+  <label><input type="radio" value="sessionStorage" v-model="autoCacheStorage"
+    >sessionStorage</label>
+  <label><input type="radio" value="localStorage" v-model="autoCacheStorage"
+    >localStorage</label>
+</span>
+<span v-for="type in ['session','local']"><button
+  v-if="chkWS(type)"
+  v-on:click="window[type+'Storage'].clear();$event.target.style.display='none'"
+  >clear {{type}}Storage</button></span>
 </div>
 </div>
 
