@@ -196,8 +196,8 @@
 <div v-if="enableAutoCacheMenu">
 <label><input type="checkbox" v-model="autoCache">(automatically save function drafts to localStorage)</label>
 <button
-  v-show="chkLS()"
-  v-on:click="window.localStorage.clear()"
+  v-if="chkLS()"
+  v-on:click="window.localStorage.clear();$event.target.style.display='none'"
   >clear localStorage</button>
 </div>
 </div>
